@@ -2,6 +2,7 @@ package com.feeleuterio.filmo.view.main;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.VisibleForTesting;
+import android.view.View;
 
 import com.feeleuterio.filmo.api.ApiService;
 import com.feeleuterio.filmo.api.model.Configuration;
@@ -67,8 +68,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void getMovies(final boolean isRefresh) {
-        Call<Movies> call = apiService.getMovies(getReleaseDate(),
-                ApiService.SortBy.RELEASE_DATE_DESCENDING, page);
+        Call<Movies> call = apiService.getMovies(page);
         call.enqueue(new Callback<Movies>() {
             @Override
             public void onResponse(Call<Movies> call, Response<Movies> response) {

@@ -1,13 +1,21 @@
 package com.feeleuterio.filmo.view.main;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.feeleuterio.filmo.R;
 import com.feeleuterio.filmo.api.model.Images;
@@ -23,17 +31,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.R.attr.button;
 import static com.feeleuterio.filmo.view.detail.DetailActivity.MOVIE_ID;
 import static com.feeleuterio.filmo.view.detail.DetailActivity.MOVIE_TITLE;
 
 public class MainActivity extends AppCompatActivity implements
         MainContract.View,
-        SwipeRefreshLayout.OnRefreshListener, EndlessScrollListener.ScrollToBottomListener, MoviesAdapter.ItemClickListener {
+        SwipeRefreshLayout.OnRefreshListener, EndlessScrollListener.ScrollToBottomListener,
+        MoviesAdapter.ItemClickListener {
     private static final String TAG = "Main";
 
     @Inject
     MainPresenter presenter;
 
+    @BindView(R.id.searchContainer)
+    EditText searchContainer;
+    @BindView(R.id.searchIconContainer)
+    ImageView searchIconContainer;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.recyclerView)
@@ -54,17 +68,26 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         setupContentView();
-        try{
-            DaggerMainComponent.builder()
-                    .appComponent(App.getAppComponent(getApplication()))
-                    .mainModule(new MainModule(this))
-                    .build()
-                    .inject(this);
-        }catch (Exception e)
-        {
-            String s = e.getMessage();
-        }
 
+        DaggerMainComponent.builder()
+                .appComponent(App.getAppComponent(getApplication()))
+                .mainModule(new MainModule(this))
+                .build()
+                .inject(this);
+
+        searchIconContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(searchContainer.getVisibility() == View.GONE) {
+                    searchContainer.setVisibility(View.VISIBLE);
+                    searchIconContainer.setImageResource(R.drawable.search_black_48dp);
+                }
+                else if (searchContainer.getVisibility() == View.VISIBLE) {
+                    searchContainer.setVisibility(View.GONE);
+                    searchIconContainer.setImageResource(R.drawable.search_white_48dp);
+                }
+            }
+        });
     }
 
     private void setupContentView() {
@@ -85,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onScrollToBottom() {
         presenter.onScrollToBottom();
     }
+
 
     @Override
     protected void onStart() {
@@ -118,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements
             moviesAdapter.notifyDataSetChanged();
         }
 
-        // Delay SwipeRefreshLayout animation by 1.5 seconds
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -161,5 +184,4 @@ public class MainActivity extends AppCompatActivity implements
     void onClickErrorView() {
         presenter.start();
     }
-
 }

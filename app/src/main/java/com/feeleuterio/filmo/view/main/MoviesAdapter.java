@@ -54,10 +54,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                     .transition(withCrossFade())
                     .into(holder.imageView);
         }
-
-        String popularity = getPopularityString(movie.popularity);
-        holder.popularityTextView.setText(popularity);
         holder.titleTextView.setText(movie.title);
+        holder.releaseTitleTextView.setText(R.string.title_release_date);
+        holder.releaseDateTextView.setText(movie.releaseDate);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,10 +78,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         if (images != null && images.baseUrl != null && !images.baseUrl.isEmpty()) {
             if (images.posterSizes != null) {
                 if (images.posterSizes.size() > 4) {
-                    // usually equal to 'w500'
                     return images.baseUrl + images.posterSizes.get(4) + imagePath;
                 } else {
-                    // back-off to hard-coded value
                     return images.baseUrl + "w500" + imagePath;
                 }
             }
@@ -110,30 +107,24 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        @BindView(R.id.imageView)
-        ImageView imageView;
-        @BindView(R.id.popularityTextView)
-        TextView popularityTextView;
         @BindView(R.id.titleTextView)
         TextView titleTextView;
+        @BindView(R.id.imageView)
+        ImageView imageView;
+        @BindView(R.id.releaseTitleTextView)
+        TextView releaseTitleTextView;
+        @BindView(R.id.releaseDateTextView)
+        TextView releaseDateTextView;
 
         ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             ButterKnife.bind(this, itemView);
         }
-
-    }
-
-    private String getPopularityString(float popularity) {
-        java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat("#.#");
-        return decimalFormat.format(popularity);
     }
 
     public interface ItemClickListener {
 
         void onItemClick(int movieId, String title);
-
     }
-
 }

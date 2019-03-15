@@ -1,7 +1,6 @@
 package com.feeleuterio.filmo.view;
 
 import android.app.Application;
-
 import com.feeleuterio.filmo.R;
 import com.feeleuterio.filmo.api.ApiModule;
 
@@ -18,8 +17,8 @@ public class App extends Application {
                 .build();
     }
 
-    public static AppComponent getAppComponent(Application application) {
-        return ((App) application).getAppComponent();
+    public static AppComponent getAppComponent(Application app) {
+        return ((App) app).getAppComponent();
     }
 
     public AppComponent getAppComponent() {

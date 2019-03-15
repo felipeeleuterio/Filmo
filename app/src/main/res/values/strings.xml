@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Filmo</string>
-    <string name="base_url">https://apiModule.themoviedb.org/</string>
+    <string name="base_url">https://api.themoviedb.org/</string>
     <string name="web_url">https://www.themoviedb.org/movie/</string>
     <string name="web_title">Book a Movie</string>
     <string name="api_key">c66cc26359cd6ca25d816cdc69752cd4</string>
@@ -10,6 +10,7 @@
     <string name="overview_header">Overview</string>
     <string name="duration_header">Duration</string>
     <string name="language_header">Language</string>
+    <string name="title_release_date">Release date:</string>
 
     <plurals name="duration">
         <item quantity="one">%d minute</item>

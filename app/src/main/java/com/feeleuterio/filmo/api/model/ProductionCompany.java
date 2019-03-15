@@ -6,14 +6,23 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "id",
+        "logo_path",
         "name",
-        "id"
+        "origin_country"
 })
 public class ProductionCompany {
 
-    @JsonProperty("name")
-    public String name;
     @JsonProperty("id")
     public int id;
+
+    @JsonProperty("logo_path")
+    public String logoPath;
+
+    @JsonProperty("name")
+    public String name;
+
+    @JsonProperty("origin_country")
+    public String originCountry;
 
 }

@@ -30,7 +30,7 @@ public class MainPresenterTest {
 
     private MainPresenter presenter;
 
-    private ApiService.SortBy defaultApiSortBy = ApiService.SortBy.RELEASE_DATE_DESCENDING;
+    //private ApiService.SortBy defaultApiSortBy = ApiService.SortBy.RELEASE_DATE_DESCENDING;
     private List<Movie> moviesFirstPage;
     private List<Movie> moviesSecondPage;
     private Images images;
@@ -50,16 +50,16 @@ public class MainPresenterTest {
         this.images = configuration.images;
 
         // Mock API Calls
-        when(apiService.getMovies(presenter.getReleaseDate(), defaultApiSortBy, 1))
+        when(apiService.getMovies(1))
                 .thenReturn(RetrofitTestUtil.createCall(moviesFirstPage));
-        when(apiService.getMovies(presenter.getReleaseDate(), defaultApiSortBy, 2))
+        when(apiService.getMovies(2))
                 .thenReturn(RetrofitTestUtil.createCall(moviesSecondPage));
         when(apiService.getConfiguration())
                 .thenReturn(RetrofitTestUtil.createCall(configuration));
     }
 
     private void makeGetMoviesFail() {
-        when(apiService.getMovies(anyString(), any(ApiService.SortBy.class), anyInt()))
+        when(apiService.getMovies(/*anyString(), any(ApiService.SortBy.class),*/ anyInt()))
                 .thenReturn(RetrofitTestUtil.createCall(500, new Movies()));
     }
 
