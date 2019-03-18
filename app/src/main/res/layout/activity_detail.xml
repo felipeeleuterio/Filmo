@@ -14,8 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="280dp"
         android:elevation="4dp"
-        tools:targetApi="LOLLIPOP"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        tools:targetApi="LOLLIPOP">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"

@@ -35,12 +35,10 @@ public class DetailPresenterTest {
 
         presenter = new DetailPresenter(view, apiService);
 
-        // Initialize API Model
         movie = JsonTestUtil.getJsonFromFile("movie.json", Movie.class);
         Configuration configuration = JsonTestUtil.getJsonFromFile("configuration.json", Configuration.class);
         images = configuration.images;
 
-        // Mock API Call
         when(apiService.getMovie(anyInt()))
                 .thenReturn(RetrofitTestUtil.createCall(movie));
         when(apiService.getConfiguration())

@@ -7,17 +7,12 @@ import com.feeleuterio.filmo.api.model.Movie;
 import com.feeleuterio.filmo.api.model.Movies;
 import com.feeleuterio.filmo.view.main.MainContract;
 import com.feeleuterio.filmo.view.main.MainPresenter;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import java.util.List;
-
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +25,6 @@ public class MainPresenterTest {
 
     private MainPresenter presenter;
 
-    //private ApiService.SortBy defaultApiSortBy = ApiService.SortBy.RELEASE_DATE_DESCENDING;
     private List<Movie> moviesFirstPage;
     private List<Movie> moviesSecondPage;
     private Images images;
@@ -41,7 +35,6 @@ public class MainPresenterTest {
 
         presenter = new MainPresenter(view, apiService);
 
-        // Initialize API Models
         Movies moviesFirstPage = JsonTestUtil.getJsonFromFile("movies_first_page.json", Movies.class);
         Movies moviesSecondPage = JsonTestUtil.getJsonFromFile("movies_second_page.json", Movies.class);
         Configuration configuration = JsonTestUtil.getJsonFromFile("configuration.json", Configuration.class);
@@ -49,7 +42,6 @@ public class MainPresenterTest {
         this.moviesSecondPage = moviesSecondPage.movies;
         this.images = configuration.images;
 
-        // Mock API Calls
         when(apiService.getMovies(1))
                 .thenReturn(RetrofitTestUtil.createCall(moviesFirstPage));
         when(apiService.getMovies(2))
@@ -59,7 +51,7 @@ public class MainPresenterTest {
     }
 
     private void makeGetMoviesFail() {
-        when(apiService.getMovies(/*anyString(), any(ApiService.SortBy.class),*/ anyInt()))
+        when(apiService.getMovies(anyInt()))
                 .thenReturn(RetrofitTestUtil.createCall(500, new Movies()));
     }
 
@@ -84,7 +76,6 @@ public class MainPresenterTest {
     public void onScrollToBottomLoadsMoreContent() {
         presenter.onScrollToBottom();
 
-        // make use of PTR for loading more content
         verify(view).showLoading(true);
         verify(view).showContent(moviesSecondPage, false);
     }

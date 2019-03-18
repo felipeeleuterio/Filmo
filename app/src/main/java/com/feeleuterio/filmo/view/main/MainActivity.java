@@ -1,7 +1,9 @@
 package com.feeleuterio.filmo.view.main;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,9 +11,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import com.feeleuterio.filmo.R;
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
@@ -34,7 +42,9 @@ public class MainActivity extends AppCompatActivity implements
     @Inject
     MainPresenter presenter;
     @BindView(R.id.mainToolbar)
-    Toolbar toolbar;
+    AppBarLayout toolbar;
+    @BindView(R.id.findMoviesEditText)
+    EditText editText;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.recyclerView)
@@ -47,31 +57,52 @@ public class MainActivity extends AppCompatActivity implements
     private MoviesAdapter moviesAdapter;
     private EndlessScrollListener endlessScrollListener;
     private Images images;
-    private MenuItem item;
-    private SearchView searchView;
+    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
         setupContentView();
+        setupFindMovieView();
 
         DaggerMainComponent.builder()
                 .appComponent(App.getAppComponent(getApplication()))
                 .mainModule(new MainModule(this))
                 .build()
                 .inject(this);
-        setSupportActionBar(toolbar);
+
     }
 
     private void setupContentView() {
+        imm = (InputMethodManager) this.getSystemService(Service.INPUT_METHOD_SERVICE);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setProgressViewOffset(false, 0, 100);
         GridLayoutManager linearLayoutManager = new GridLayoutManager(this, 2);
         endlessScrollListener = new EndlessScrollListener(linearLayoutManager, this);
         contentView.setLayoutManager(linearLayoutManager);
         contentView.addOnScrollListener(endlessScrollListener);
+    }
+
+    private void setupFindMovieView(){
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editText.setCursorVisible(true);
+            }
+        });
+
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                editText.setCursorVisible(false);
+                imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -84,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onScrollToBottom() {
         presenter.onScrollToBottom();
     }
-
 
     @Override
     protected void onStart() {
@@ -127,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements
         }, 1500);
 
         loadingView.setVisibility(View.GONE);
+        toolbar.setVisibility(View.VISIBLE);
         contentView.setVisibility(View.VISIBLE);
         errorView.setVisibility(View.GONE);
     }
@@ -134,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void showError() {
         swipeRefreshLayout.setRefreshing(false);
+        toolbar.setVisibility(View.GONE);
         loadingView.setVisibility(View.GONE);
         contentView.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
@@ -161,22 +193,4 @@ public class MainActivity extends AppCompatActivity implements
         presenter.start();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.item_main_search, menu);
-        item = menu.findItem(R.id.menuSearch);
-        searchView = (SearchView)item.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-        return true;
-    }
 }

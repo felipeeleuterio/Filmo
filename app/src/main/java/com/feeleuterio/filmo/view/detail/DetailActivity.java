@@ -71,6 +71,10 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
 
             setTitle(movieTitle);
         }
+        setupToolbar();
+    }
+
+    private void setupToolbar(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
