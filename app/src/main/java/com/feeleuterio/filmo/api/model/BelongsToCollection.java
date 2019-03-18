@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "backdrop_path"
 })
 public class BelongsToCollection {
+
     @JsonProperty("id")
     public int id;
     @JsonProperty("name")
@@ -20,4 +21,5 @@ public class BelongsToCollection {
     public String posterPath;
     @JsonProperty("backdrop_path")
     public String backdropPath;
+
 }

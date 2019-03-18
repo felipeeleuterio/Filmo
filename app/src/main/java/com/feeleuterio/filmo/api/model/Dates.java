@@ -10,12 +10,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "maximum",
         "minimum"
 })
-
 public class Dates {
 
     @JsonProperty("maximum")
     public String maximum;
-
     @JsonProperty("minimum")
     public String minimum;
 }

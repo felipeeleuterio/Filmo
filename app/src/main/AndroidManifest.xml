@@ -13,10 +13,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".view.main.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/MainTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,9 +25,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/app_name"
+            android:name=".view.detail.DetailActivity"
             android:parentActivityName=".view.main.MainActivity"
-            android:name=".view.detail.DetailActivity"/>
+            android:theme="@style/DetailTheme"/>
     </application>
 
 </manifest>

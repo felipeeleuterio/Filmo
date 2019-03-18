@@ -1,37 +1,27 @@
 package com.feeleuterio.filmo.view.main;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.feeleuterio.filmo.R;
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
 import com.feeleuterio.filmo.view.App;
 import com.feeleuterio.filmo.view.detail.DetailActivity;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.R.attr.button;
 import static com.feeleuterio.filmo.view.detail.DetailActivity.MOVIE_ID;
 import static com.feeleuterio.filmo.view.detail.DetailActivity.MOVIE_TITLE;
 
@@ -43,11 +33,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Inject
     MainPresenter presenter;
-
-    @BindView(R.id.searchContainer)
-    EditText searchContainer;
-    @BindView(R.id.searchIconContainer)
-    ImageView searchIconContainer;
+    @BindView(R.id.mainToolbar)
+    Toolbar toolbar;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.recyclerView)
@@ -60,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements
     private MoviesAdapter moviesAdapter;
     private EndlessScrollListener endlessScrollListener;
     private Images images;
+    private MenuItem item;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,25 +63,12 @@ public class MainActivity extends AppCompatActivity implements
                 .mainModule(new MainModule(this))
                 .build()
                 .inject(this);
-
-        searchIconContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(searchContainer.getVisibility() == View.GONE) {
-                    searchContainer.setVisibility(View.VISIBLE);
-                    searchIconContainer.setImageResource(R.drawable.search_black_48dp);
-                }
-                else if (searchContainer.getVisibility() == View.VISIBLE) {
-                    searchContainer.setVisibility(View.GONE);
-                    searchIconContainer.setImageResource(R.drawable.search_white_48dp);
-                }
-            }
-        });
+        setSupportActionBar(toolbar);
     }
 
     private void setupContentView() {
         swipeRefreshLayout.setOnRefreshListener(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        GridLayoutManager linearLayoutManager = new GridLayoutManager(this, 2);
         endlessScrollListener = new EndlessScrollListener(linearLayoutManager, this);
         contentView.setLayoutManager(linearLayoutManager);
         contentView.addOnScrollListener(endlessScrollListener);
@@ -183,5 +159,24 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick(R.id.textView)
     void onClickErrorView() {
         presenter.start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.item_main_search, menu);
+        item = menu.findItem(R.id.menuSearch);
+        searchView = (SearchView)item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+        return true;
     }
 }

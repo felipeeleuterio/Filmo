@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +15,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.feeleuterio.filmo.R;
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
+import com.github.florent37.glidepalette.BitmapPalette;
+import com.github.florent37.glidepalette.GlidePalette;
 
 import java.util.List;
 
@@ -50,6 +53,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         if (!fullImageUrl.isEmpty()) {
             Glide.with(activity)
                     .load(fullImageUrl)
+                    .listener(GlidePalette.with(fullImageUrl)
+                            .use(GlidePalette.Profile.MUTED_DARK)
+                            .use(GlidePalette.Profile.VIBRANT_DARK)
+                            .intoBackground(holder.layoutItemDescription)
+                            .crossfade(true))
                     .apply(RequestOptions.centerCropTransform())
                     .transition(withCrossFade())
                     .into(holder.imageView);
@@ -115,6 +123,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         TextView releaseTitleTextView;
         @BindView(R.id.releaseDateTextView)
         TextView releaseDateTextView;
+        @BindView(R.id.layoutItemDescription)
+        LinearLayout layoutItemDescription;
 
         ViewHolder(View itemView) {
             super(itemView);
