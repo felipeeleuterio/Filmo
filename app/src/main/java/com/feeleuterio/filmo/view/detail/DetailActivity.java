@@ -1,18 +1,12 @@
 package com.feeleuterio.filmo.view.detail;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -21,12 +15,11 @@ import com.feeleuterio.filmo.R;
 import com.feeleuterio.filmo.api.model.Genre;
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
-import com.feeleuterio.filmo.api.model.SpokenLanguage;
 import com.feeleuterio.filmo.view.App;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 public class DetailActivity extends AppCompatActivity implements DetailContract.View {
