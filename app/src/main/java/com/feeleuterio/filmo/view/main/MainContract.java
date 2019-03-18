@@ -21,11 +21,11 @@ public interface MainContract {
 
     interface Presenter {
 
-        void start();
+        void start(String query);
 
-        void onPullToRefresh();
+        void onPullToRefresh(String query);
 
-        void onScrollToBottom();
+        void onScrollToBottom(String query);
 
         void finish();
 

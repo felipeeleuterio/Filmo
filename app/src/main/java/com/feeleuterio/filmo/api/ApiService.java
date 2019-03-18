@@ -11,13 +11,32 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
+    enum Adult {
+        INCLUDE_ADULT("false");
+
+        String value;
+
+        Adult(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+    }
+
     @GET("/3/movie/upcoming")
     Call<Movies> getMovies(@Query("page") int page);
 
     @GET("/3/movie/{id}")
     Call<Movie> getMovie(@Path("id") int id);
 
-    @Headers("Cache-Control: public, max-stale=2419200") // 4 weeks
+    @GET("/3/search/movie")
+    Call<Movies> getSearch(@Query("query") String query, @Query("include_adult") Adult include,
+                           @Query("page") int page);
+
+    @Headers("Cache-Control: public, max-stale=2419200")
     @GET("/3/configuration")
     Call<Configuration> getConfiguration();
 

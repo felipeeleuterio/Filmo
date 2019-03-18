@@ -22,6 +22,7 @@ public class MainPresenter implements MainContract.Presenter {
     private ApiService apiService;
 
     private int page = 1;
+    private String query = "";
     private Configuration configuration;
 
     @Inject
@@ -31,9 +32,12 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void start() {
+    public void start(String query) {
         view.showLoading(false);
-        getMovies(true);
+        if(query.isEmpty())
+            getMovies(true);
+        else
+            getSearch(true, query);
         getConfiguration();
     }
 
@@ -54,21 +58,47 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void onPullToRefresh() {
+    public void onPullToRefresh(String query) {
         page = 1;
+        query = query;
         view.showLoading(true);
-        getMovies(true);
+        if(query.isEmpty())
+            getMovies(true);
+        else
+            getSearch(true, query);
     }
 
     @Override
-    public void onScrollToBottom() {
+    public void onScrollToBottom(String query) {
         page++;
         view.showLoading(true);
-        getMovies(false);
+        if(query.isEmpty())
+            getMovies(false);
+        else
+            getSearch(false, query);
     }
 
     private void getMovies(final boolean isRefresh) {
         Call<Movies> call = apiService.getMovies(page);
+        call.enqueue(new Callback<Movies>() {
+            @Override
+            public void onResponse(Call<Movies> call, Response<Movies> response) {
+                if (response.isSuccessful()) {
+                    view.showContent(response.body().movies, isRefresh);
+                } else {
+                    view.showError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Movies> call, Throwable t) {
+                view.showError();
+            }
+        });
+    }
+
+    private void getSearch(final boolean isRefresh, final String query) {
+        Call<Movies> call = apiService.getSearch(query, ApiService.Adult.INCLUDE_ADULT, page);
         call.enqueue(new Callback<Movies>() {
             @Override
             public void onResponse(Call<Movies> call, Response<Movies> response) {

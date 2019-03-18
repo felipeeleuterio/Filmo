@@ -1,8 +1,11 @@
 package com.feeleuterio.filmo.view.main;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,26 +54,35 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
         String fullImageUrl = getFullImageUrl(movie);
         if (!fullImageUrl.isEmpty()) {
+
+            RequestOptions options = new RequestOptions()
+                    .error(R.drawable.movies_white_48dp);
+
             Glide.with(activity)
                     .load(fullImageUrl)
+
                     .listener(GlidePalette.with(fullImageUrl)
                             .use(GlidePalette.Profile.MUTED_DARK)
                             .use(GlidePalette.Profile.VIBRANT_DARK)
                             .intoBackground(holder.layoutItemDescription)
                             .crossfade(true))
-                    .apply(RequestOptions.centerCropTransform())
+                    .apply(options)
                     .transition(withCrossFade())
                     .into(holder.imageView);
         }
         holder.titleTextView.setText(movie.title);
         holder.releaseTitleTextView.setText(R.string.title_release_date);
-        holder.releaseDateTextView.setText(movie.releaseDate);
+        holder.releaseDateTextView.setText(getReleaseDate(movie.releaseDate));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 itemClickListener.onItemClick(movie.id, movie.title);
             }
         });
+    }
+
+    private String getReleaseDate(String releaseDate) {
+        return TextUtils.isEmpty(releaseDate) ? "-" : releaseDate;
     }
 
     @NonNull
@@ -92,7 +104,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                 }
             }
         }
-
         return "";
     }
 

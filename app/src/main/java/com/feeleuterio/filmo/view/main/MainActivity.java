@@ -11,6 +11,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements
                 .mainModule(new MainModule(this))
                 .build()
                 .inject(this);
-
     }
 
     private void setupContentView() {
@@ -99,27 +100,40 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 editText.setCursorVisible(false);
-                imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                presenter.start(editText.getText().toString());
                 return false;
             }
         });
     }
 
     @Override
+    public void onBackPressed() {
+        if(!editText.getText().toString().isEmpty()){
+            toolbar.setExpanded(true);
+            editText.setText("");
+            presenter.start(editText.getText().toString());
+        }
+        else
+            super.onBackPressed();
+    }
+
+    @Override
     public void onRefresh() {
         endlessScrollListener.onRefresh();
-        presenter.onPullToRefresh();
+        presenter.onPullToRefresh(editText.getText().toString());
     }
 
     @Override
     public void onScrollToBottom() {
-        presenter.onScrollToBottom();
+        presenter.onScrollToBottom(editText.getText().toString());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        presenter.start();
+        presenter.start(editText.getText().toString());
     }
 
     @Override
@@ -190,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @OnClick(R.id.textView)
     void onClickErrorView() {
-        presenter.start();
+        presenter.start(editText.getText().toString());
     }
 
 }
