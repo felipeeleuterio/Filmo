@@ -2,7 +2,6 @@ package com.feeleuterio.filmo.view.main;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 public class EndlessScrollListener extends RecyclerView.OnScrollListener {
     private LinearLayoutManager linearLayoutManager;
@@ -26,7 +25,6 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-
         visibleItemCount = recyclerView.getChildCount();
         totalItemCount = linearLayoutManager.getItemCount();
         firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
@@ -47,6 +45,5 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
     interface ScrollToBottomListener {
 
         void onScrollToBottom();
-
     }
 }

@@ -61,7 +61,6 @@ public class ApiModule {
                                      Interceptor authenticationInterceptor) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-
         return new OkHttpClient.Builder()
                 .addNetworkInterceptor(stethoInterceptor)
                 .addInterceptor(authenticationInterceptor)

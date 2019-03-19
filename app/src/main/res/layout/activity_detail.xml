@@ -31,7 +31,7 @@
                 android:id="@+id/movieDetailPoster"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
+                android:scaleType="center"
                 app:layout_collapseMode="parallax"
                 android:fitsSystemWindows="true"
                 android:contentDescription="@string/app_name"/>
@@ -92,7 +92,7 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/detailPosterHeight"
                         android:layout_weight="1"
-                        android:scaleType="centerCrop"
+                        android:scaleType="center"
                         android:background="@color/translucent"
                         android:contentDescription="@string/app_name"/>
 

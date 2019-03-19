@@ -1,5 +1,6 @@
 package com.feeleuterio.filmo.view.main;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -9,19 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.feeleuterio.filmo.R;
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
@@ -58,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private MoviesAdapter moviesAdapter;
     private EndlessScrollListener endlessScrollListener;
+    private GridLayoutManager gridLayoutManager;
     private Images images;
     private InputMethodManager imm;
 
@@ -80,40 +76,68 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setupContentView() {
         imm = (InputMethodManager) this.getSystemService(Service.INPUT_METHOD_SERVICE);
+
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setProgressViewOffset(false, 0, 100);
-        GridLayoutManager linearLayoutManager = new GridLayoutManager(this, 2);
-        endlessScrollListener = new EndlessScrollListener(linearLayoutManager, this);
-        contentView.setLayoutManager(linearLayoutManager);
+        swipeRefreshLayout.setProgressViewOffset(false, 0, 136);
+
+        gridLayoutManager = new GridLayoutManager(this, 2);
+        endlessScrollListener = new EndlessScrollListener(gridLayoutManager, this);
+        contentView.setLayoutManager(gridLayoutManager);
         contentView.addOnScrollListener(endlessScrollListener);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupFindMovieView(){
-        editText.setOnClickListener(new View.OnClickListener() {
+        editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_RIGHT = 2;
+
                 editText.setCursorVisible(true);
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if(motionEvent.getRawX() <= (editText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
+                        onTouchFindMovieView(true);
+                        return true;
+                    }
+                    else if(motionEvent.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        onTouchFindMovieView(false);
+                        return true;
+                    }
+                }
+                return false;
             }
         });
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                editText.setCursorVisible(false);
-                imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
-                presenter.start(editText.getText().toString());
+                onTouchFindMovieView(false);
                 return false;
             }
         });
     }
 
+    private void onTouchFindMovieView(boolean onBackPressed){
+        editText.setCursorVisible(false);
+        imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        if (!editText.getText().toString().isEmpty() && (!onBackPressed)) {
+            editText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_back_black_48dp, 0, R.drawable.search_black_48dp, 0);
+        }
+        else {
+            editText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.camera_black_48dp, 0, R.drawable.search_black_48dp, 0);
+            editText.setText("");
+            toolbar.setExpanded(true);
+        }
+        presenter.start(editText.getText().toString());
+        gridLayoutManager.smoothScrollToPosition(contentView, null, 0);
+    }
+
     @Override
     public void onBackPressed() {
         if(!editText.getText().toString().isEmpty()){
-            toolbar.setExpanded(true);
-            editText.setText("");
-            presenter.start(editText.getText().toString());
+            onTouchFindMovieView(true);
         }
         else
             super.onBackPressed();

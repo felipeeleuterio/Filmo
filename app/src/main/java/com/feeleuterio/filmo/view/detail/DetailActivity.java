@@ -98,17 +98,21 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
         toolbar.setTitle(getTitle());
         String fullImagePosterUrl = getFullImagePosterUrl(movie);
         if (!fullImagePosterUrl.isEmpty()) {
+            RequestOptions options = new RequestOptions()
+                    .error(R.drawable.movies_white_48dp);
             Glide.with(this)
                     .load(fullImagePosterUrl)
-                    .apply(RequestOptions.centerCropTransform())
+                    .apply(options)
                     .transition(withCrossFade())
                     .into(imageViewPoster);
         }
         String fullImageUrl = getFullImageUrl(movie);
         if (!fullImageUrl.isEmpty()) {
+            RequestOptions options = new RequestOptions()
+                    .error(R.drawable.movies_white_48dp);
             Glide.with(this)
                     .load(fullImageUrl)
-                    .apply(RequestOptions.centerCropTransform())
+                    .apply(options)
                     .transition(withCrossFade())
                     .into(imageView);
         }

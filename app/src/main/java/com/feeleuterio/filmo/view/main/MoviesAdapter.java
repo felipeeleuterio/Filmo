@@ -54,13 +54,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
         String fullImageUrl = getFullImageUrl(movie);
         if (!fullImageUrl.isEmpty()) {
-
             RequestOptions options = new RequestOptions()
                     .error(R.drawable.movies_white_48dp);
-
             Glide.with(activity)
                     .load(fullImageUrl)
-
                     .listener(GlidePalette.with(fullImageUrl)
                             .use(GlidePalette.Profile.MUTED_DARK)
                             .use(GlidePalette.Profile.VIBRANT_DARK)

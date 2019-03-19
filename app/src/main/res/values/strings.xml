@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Filmo</string>
-    <string name="title_main">Filmo... find your movies here...</string>
+    <string name="title_main">Find your movies here...</string>
     <string name="base_url">https://api.themoviedb.org/</string>
     <string name="api_key">c66cc26359cd6ca25d816cdc69752cd4</string>
     <string name="generic_error">Oops! Click here to refresh or\nPlease try again later...</string>

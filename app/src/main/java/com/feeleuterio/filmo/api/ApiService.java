@@ -36,7 +36,7 @@ public interface ApiService {
     Call<Movies> getSearch(@Query("query") String query, @Query("include_adult") Adult include,
                            @Query("page") int page);
 
-    @Headers("Cache-Control: public, max-stale=2419200")
+    @Headers("Cache-Control: public, max-stale=2592000")
     @GET("/3/configuration")
     Call<Configuration> getConfiguration();
 
