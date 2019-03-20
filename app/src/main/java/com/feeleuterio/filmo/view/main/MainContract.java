@@ -2,7 +2,6 @@ package com.feeleuterio.filmo.view.main;
 
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
-
 import java.util.List;
 
 public interface MainContract {

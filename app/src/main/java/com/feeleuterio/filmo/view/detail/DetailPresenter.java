@@ -4,17 +4,15 @@ import com.feeleuterio.filmo.api.ApiService;
 import com.feeleuterio.filmo.api.model.Configuration;
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
-
 import javax.inject.Inject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailPresenter implements DetailContract.Presenter {
+
     private DetailContract.View view;
     private ApiService apiService;
-
     private Images images;
 
     @Inject

@@ -19,6 +19,7 @@ android {
 }
 ext {
     supportLibraryVersion = "28.0.0"
+    archVersion = "1.1.1"
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -45,7 +46,12 @@ dependencies {
     implementation 'com.fasterxml.jackson:jackson-parent:2.7'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 
-    // Debug
+    //room
+    implementation "android.arch.persistence.room:runtime:${archVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${archVersion}"
+    androidTestImplementation "android.arch.persistence.room:testing:${archVersion}"
+
+    //debug
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
@@ -58,4 +64,5 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.powermock:powermock-module-junit4:1.6.2'
     testImplementation 'org.powermock:powermock-api-mockito:1.6.2'
+
 }

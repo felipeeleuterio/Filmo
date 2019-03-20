@@ -6,12 +6,10 @@ import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
 import com.feeleuterio.filmo.view.detail.DetailContract;
 import com.feeleuterio.filmo.view.detail.DetailPresenter;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

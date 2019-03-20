@@ -1,13 +1,16 @@
 package com.feeleuterio.filmo.api;
 
+import android.app.Application;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feeleuterio.filmo.api.factory.EnumConverterFactory;
+import com.feeleuterio.filmo.utils.LiveDataCallAdapterFactory;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Cache;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -25,6 +28,14 @@ public class ApiModule {
     public ApiModule(String baseUrl, String apiKey) {
         this.baseUrl = baseUrl;
         this.apiKey = apiKey;
+    }
+
+    @Provides
+    @Singleton
+    public Cache provideHttpCache(Application application) {
+        long cacheSize = 10 * 1024 * 1024L;
+        Cache cache = new Cache(application.getCacheDir(), cacheSize);
+        return cache;
     }
 
     @Provides
@@ -58,7 +69,8 @@ public class ApiModule {
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient(StethoInterceptor stethoInterceptor,
-                                     Interceptor authenticationInterceptor) {
+                                     Interceptor authenticationInterceptor,
+                                     Cache cache) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         return new OkHttpClient.Builder()
@@ -68,6 +80,7 @@ public class ApiModule {
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
+                .cache(cache)
                 .build();
     }
 
@@ -88,6 +101,7 @@ public class ApiModule {
                 .client(okHttpClient)
                 .addConverterFactory(jacksonConverterFactory)
                 .addConverterFactory(new EnumConverterFactory())
+                .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build();
     }
 
@@ -96,4 +110,5 @@ public class ApiModule {
     public ApiService provideApiService(Retrofit retrofit) {
         return retrofit.create(ApiService.class);
     }
+
 }

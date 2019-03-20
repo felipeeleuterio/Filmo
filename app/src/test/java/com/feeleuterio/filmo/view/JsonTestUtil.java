@@ -1,9 +1,7 @@
 package com.feeleuterio.filmo.view;
 
 import android.support.annotation.NonNull;
-
 import java.io.IOException;
-
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.ResponseBody;

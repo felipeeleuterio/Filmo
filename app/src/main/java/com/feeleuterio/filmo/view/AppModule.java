@@ -1,9 +1,7 @@
 package com.feeleuterio.filmo.view;
 
 import android.app.Application;
-
 import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -20,4 +18,5 @@ public class AppModule {
     Application provideApplication() {
         return mApplication;
     }
+
 }

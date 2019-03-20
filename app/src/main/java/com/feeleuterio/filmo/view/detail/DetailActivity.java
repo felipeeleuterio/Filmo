@@ -74,7 +74,7 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
         setupToolbar();
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -94,12 +94,11 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
 
     @Override
     public void showContent(Movie movie) {
-
         toolbar.setTitle(getTitle());
         String fullImagePosterUrl = getFullImagePosterUrl(movie);
         if (!fullImagePosterUrl.isEmpty()) {
             RequestOptions options = new RequestOptions()
-                    .error(R.drawable.movies_white_48dp);
+                    .error(R.color.colorPrimaryDark);
             Glide.with(this)
                     .load(fullImagePosterUrl)
                     .apply(options)
@@ -145,8 +144,8 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
 
         if (images != null && images.baseUrl != null && !images.baseUrl.isEmpty()) {
             if (images.posterSizes != null) {
-                if (images.posterSizes.size() > 4) {
-                    return images.baseUrl + images.posterSizes.get(4) + imagePath;
+                if (images.posterSizes.size() > 5) {
+                    return images.baseUrl + images.posterSizes.get(5) + imagePath;
                 } else {
                     return images.baseUrl + "w500" + imagePath;
                 }
@@ -168,7 +167,7 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
         if (images != null && images.baseUrl != null && !images.baseUrl.isEmpty()) {
             if (images.posterSizes != null) {
                 if (images.posterSizes.size() > 4) {
-                    return images.baseUrl + images.posterSizes.get(4) + imagePath;
+                    return images.baseUrl + images.posterSizes.get(5) + imagePath;
                 } else {
                     return images.baseUrl + "w500" + imagePath;
                 }
@@ -227,4 +226,5 @@ public class DetailActivity extends AppCompatActivity implements DetailContract.
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

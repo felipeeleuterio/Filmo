@@ -1,7 +1,6 @@
 package com.feeleuterio.filmo.view.main;
 
 import com.feeleuterio.filmo.view.ActivityScope;
-
 import dagger.Module;
 import dagger.Provides;
 

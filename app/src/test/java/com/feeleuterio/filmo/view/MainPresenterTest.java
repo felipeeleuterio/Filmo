@@ -57,7 +57,7 @@ public class MainPresenterTest {
 
     @Test
     public void onStartLoadsContent() {
-        presenter.start();
+        presenter.start("");
 
         verify(view).showLoading(false);
         verify(view).showContent(moviesFirstPage, true);
@@ -66,7 +66,7 @@ public class MainPresenterTest {
 
     @Test
     public void onPullToRefreshRefreshesContent() {
-        presenter.onPullToRefresh();
+        presenter.onPullToRefresh("");
 
         verify(view).showLoading(true);
         verify(view).showContent(moviesFirstPage, true);
@@ -74,7 +74,7 @@ public class MainPresenterTest {
 
     @Test
     public void onScrollToBottomLoadsMoreContent() {
-        presenter.onScrollToBottom();
+        presenter.onScrollToBottom("");
 
         verify(view).showLoading(true);
         verify(view).showContent(moviesSecondPage, false);
@@ -83,7 +83,7 @@ public class MainPresenterTest {
     @Test
     public void onStartLoadsContentFail() {
         makeGetMoviesFail();
-        presenter.start();
+        presenter.start("");
 
         verify(view).showLoading(false);
         verify(view).showError();
@@ -92,7 +92,7 @@ public class MainPresenterTest {
     @Test
     public void onPullToRefreshRefreshesContentFail() {
         makeGetMoviesFail();
-        presenter.onPullToRefresh();
+        presenter.onPullToRefresh("");
 
         verify(view).showLoading(true);
         verify(view).showError();
@@ -101,9 +101,8 @@ public class MainPresenterTest {
     @Test
     public void onScrollToBottomLoadsMoreContentFail() {
         makeGetMoviesFail();
-        presenter.onScrollToBottom();
+        presenter.onScrollToBottom("");
 
-        // make use of PTR for loading more content
         verify(view).showLoading(true);
         verify(view).showError();
     }

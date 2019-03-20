@@ -1,8 +1,11 @@
 package com.feeleuterio.filmo.api;
 
+import android.arch.lifecycle.LiveData;
 import com.feeleuterio.filmo.api.model.Configuration;
 import com.feeleuterio.filmo.api.model.Movie;
 import com.feeleuterio.filmo.api.model.Movies;
+import com.feeleuterio.filmo.dto.ApiResponse;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -31,6 +34,9 @@ public interface ApiService {
 
     @GET("/3/movie/{id}")
     Call<Movie> getMovie(@Path("id") int id);
+
+    @GET("/3/movie/{id}")
+    public LiveData<ApiResponse<List<Movie>>> repoMovieLiveData(@Query("page") int page);
 
     @GET("/3/search/movie")
     Call<Movies> getSearch(@Query("query") String query, @Query("include_adult") Adult include,

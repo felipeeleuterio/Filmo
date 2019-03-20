@@ -5,6 +5,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +28,6 @@ import java.util.List;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import static com.feeleuterio.filmo.view.detail.DetailActivity.MOVIE_ID;
 import static com.feeleuterio.filmo.view.detail.DetailActivity.MOVIE_TITLE;
 
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Inject
     MainPresenter presenter;
+    @BindView(R.id.mainActivity)
+    CoordinatorLayout layout;
     @BindView(R.id.mainToolbar)
     AppBarLayout toolbar;
     @BindView(R.id.findMoviesEditText)
@@ -46,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView contentView;
-    @BindView(R.id.textView)
-    View errorView;
     @BindView(R.id.progressBar)
     View loadingView;
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setupFindMovieView(){
+    private void setupFindMovieView() {
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -119,26 +120,30 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void onTouchFindMovieView(boolean onBackPressed){
+    private void onTouchFindMovieView(boolean onGenericBackPressed) {
         editText.setCursorVisible(false);
         imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        if (!editText.getText().toString().isEmpty() && (!onBackPressed)) {
+        if (!getQuery().isEmpty() && (!onGenericBackPressed)) {
             editText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_back_black_48dp, 0, R.drawable.search_black_48dp, 0);
         }
         else {
             editText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.camera_black_48dp, 0, R.drawable.search_black_48dp, 0);
-            editText.setText("");
+            editText.getText().clear();
             toolbar.setExpanded(true);
         }
-        presenter.start(editText.getText().toString());
-        gridLayoutManager.smoothScrollToPosition(contentView, null, 0);
+        presenter.start(getQuery());
+        if((onGenericBackPressed) || (!getQuery().isEmpty()))
+            gridLayoutManager.smoothScrollToPosition(contentView, null, 0);
+    }
+
+    private String getQuery() {
+        return editText.getText().toString();
     }
 
     @Override
     public void onBackPressed() {
-        if(!editText.getText().toString().isEmpty()){
+        if(!getQuery().isEmpty())
             onTouchFindMovieView(true);
-        }
         else
             super.onBackPressed();
     }
@@ -146,18 +151,18 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onRefresh() {
         endlessScrollListener.onRefresh();
-        presenter.onPullToRefresh(editText.getText().toString());
+        presenter.onPullToRefresh(getQuery());
     }
 
     @Override
     public void onScrollToBottom() {
-        presenter.onScrollToBottom(editText.getText().toString());
+        presenter.onScrollToBottom(getQuery());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        presenter.start(editText.getText().toString());
+        presenter.start(getQuery());
     }
 
     @Override
@@ -166,10 +171,6 @@ public class MainActivity extends AppCompatActivity implements
             if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
-        } else {
-            loadingView.setVisibility(View.VISIBLE);
-            contentView.setVisibility(View.GONE);
-            errorView.setVisibility(View.GONE);
         }
     }
 
@@ -197,16 +198,13 @@ public class MainActivity extends AppCompatActivity implements
         loadingView.setVisibility(View.GONE);
         toolbar.setVisibility(View.VISIBLE);
         contentView.setVisibility(View.VISIBLE);
-        errorView.setVisibility(View.GONE);
     }
 
     @Override
     public void showError() {
         swipeRefreshLayout.setRefreshing(false);
-        toolbar.setVisibility(View.GONE);
         loadingView.setVisibility(View.GONE);
-        contentView.setVisibility(View.GONE);
-        errorView.setVisibility(View.VISIBLE);
+        Snackbar.make(layout, getString(R.string.generic_error), Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
@@ -224,11 +222,6 @@ public class MainActivity extends AppCompatActivity implements
         i.putExtra(MOVIE_ID, movieId);
         i.putExtra(MOVIE_TITLE, movieTitle);
         startActivity(i);
-    }
-
-    @OnClick(R.id.textView)
-    void onClickErrorView() {
-        presenter.start(editText.getText().toString());
     }
 
 }

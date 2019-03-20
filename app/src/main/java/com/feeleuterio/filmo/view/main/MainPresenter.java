@@ -2,17 +2,12 @@ package com.feeleuterio.filmo.view.main;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.VisibleForTesting;
-import android.view.View;
-
 import com.feeleuterio.filmo.api.ApiService;
 import com.feeleuterio.filmo.api.model.Configuration;
 import com.feeleuterio.filmo.api.model.Movies;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 import javax.inject.Inject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,8 +31,10 @@ public class MainPresenter implements MainContract.Presenter {
         view.showLoading(false);
         if(query.isEmpty())
             getMovies(true);
-        else
+        else {
+            page = 1;
             getSearch(true, query);
+        }
         getConfiguration();
     }
 

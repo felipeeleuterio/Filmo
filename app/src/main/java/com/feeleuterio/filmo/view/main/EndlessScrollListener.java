@@ -45,5 +45,6 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
     interface ScrollToBottomListener {
 
         void onScrollToBottom();
+
     }
 }
