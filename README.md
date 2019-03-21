@@ -2,6 +2,8 @@
 
 Projeto Android utilizando [TMDb API](https://www.themoviedb.org/documentation/api).
 
+![20190320_220349](https://user-images.githubusercontent.com/39193436/54728489-eefad080-4b5c-11e9-9c3a-3fd3e7ca705d.gif)
+
 ## Definir API key no arquivo strings.xml
 ```xml
 <string name="api_key">API_KEY_AQUI</string>
