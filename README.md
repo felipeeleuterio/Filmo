@@ -6,9 +6,9 @@ Projeto Android utilizando [TMDb API](https://www.themoviedb.org/documentation/a
 ![20190320_220502](https://user-images.githubusercontent.com/39193436/54728545-3d0fd400-4b5d-11e9-9eec-bd68047252e2.gif)
 ![20190320_220558](https://user-images.githubusercontent.com/39193436/54728588-895b1400-4b5d-11e9-900b-1569329638b3.gif)
 
-## Definir API key no arquivo strings.xml
+## Definir API Key no arquivo local.properties
 ```xml
-<string name="api_key">API_KEY_AQUI</string>
+tmdb_api_key=API_KEY_AQUI
 ```
 ## Libraries
 - Dagger2 para injeção de dependências
