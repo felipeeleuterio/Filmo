@@ -2,7 +2,6 @@
     <string name="app_name">Filmo</string>
     <string name="title_main">Find your movies here…</string>
     <string name="base_url">https://api.themoviedb.org/</string>
-    <string name="api_key">API_KEY_AQUI</string>
     <string name="generic_error">Ooops! No internet connection…</string>
     <string name="genres_header">Genres</string>
     <string name="overview_header">Overview</string>
