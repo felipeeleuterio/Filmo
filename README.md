@@ -12,7 +12,7 @@ tmdb_api_key=API_KEY_AQUI
 ```
 ## Libraries
 - Dagger2 para injeção de dependências
-- Retrofit2 e Jackson para construção da REST API
+- Retrofit2 RxJava2 e Jackson para construção da REST API
 - OkHttp3 para auxiliar na recepção da REST API
 - Android Architecture Components: Room para persistência de dados e funcionamento offline
 - Glide para carregar as imagens
