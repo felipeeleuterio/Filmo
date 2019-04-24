@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
 import retrofit2.Response;
 
 public class MovieRepository {
@@ -64,8 +66,8 @@ public class MovieRepository {
                 return;
             }
             Log.d("DATA", "Fetching from server: " + page + " , " + limit);
-            Response<Movie> response = api.getMovie(page).execute();
-            List<Movie> body = (List<Movie>) response.body();
+            Observable<Movie> response = api.getMovie(page);
+            List<Movie> body = (List<Movie>) response;
             if (body != null) {
                 Movie[] arr = new Movie[body.size()];
                 body.toArray(arr);
@@ -77,7 +79,7 @@ public class MovieRepository {
                     Log.d("DATA", "Data inserted");
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("API", "" + e.getMessage());
         }
     }

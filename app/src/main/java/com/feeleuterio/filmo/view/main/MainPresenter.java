@@ -8,6 +8,12 @@ import com.feeleuterio.filmo.api.model.Movies;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,19 +45,30 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void getConfiguration() {
-        Call<Configuration> call = apiService.getConfiguration();
-        call.enqueue(new Callback<Configuration>() {
-            @Override
-            public void onResponse(Call<Configuration> call, Response<Configuration> response) {
-                if (response.isSuccessful()) {
-                    view.onConfigurationSet(response.body().images);
-                }
-            }
+        Observable<Configuration> observable = apiService.getConfiguration();
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Configuration>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void onFailure(Call<Configuration> call, Throwable t) {
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(Configuration configuration) {
+                        view.onConfigurationSet(configuration.images);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -76,41 +93,57 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void getMovies(final boolean isRefresh) {
-        Call<Movies> call = apiService.getMovies(page);
-        call.enqueue(new Callback<Movies>() {
-            @Override
-            public void onResponse(Call<Movies> call, Response<Movies> response) {
-                if (response.isSuccessful()) {
-                    view.showContent(response.body().movies, isRefresh);
-                } else {
-                    view.showError();
-                }
-            }
+        Observable<Movies> observable = apiService.getMovies(page);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Movies>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void onFailure(Call<Movies> call, Throwable t) {
-                view.showError();
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(Movies movies) {
+                        view.showContent(movies.movies, isRefresh);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        view.showError();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void getSearch(final boolean isRefresh, final String query) {
-        Call<Movies> call = apiService.getSearch(query, ApiService.Adult.INCLUDE_ADULT, page);
-        call.enqueue(new Callback<Movies>() {
-            @Override
-            public void onResponse(Call<Movies> call, Response<Movies> response) {
-                if (response.isSuccessful()) {
-                    view.showContent(response.body().movies, isRefresh);
-                } else {
-                    view.showError();
-                }
-            }
+        Observable<Movies> observable = apiService.getSearch(query, ApiService.Adult.INCLUDE_ADULT, page);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Movies>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void onFailure(Call<Movies> call, Throwable t) {
-                view.showError();
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(Movies movies) {
+                        view.showContent(movies.movies, isRefresh);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        view.showError();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @VisibleForTesting

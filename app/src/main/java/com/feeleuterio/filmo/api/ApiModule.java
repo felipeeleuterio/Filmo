@@ -7,6 +7,8 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feeleuterio.filmo.api.factory.EnumConverterFactory;
 import com.feeleuterio.filmo.utils.LiveDataCallAdapterFactory;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
@@ -18,6 +20,7 @@ import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @Module
@@ -101,6 +104,7 @@ public class ApiModule {
                 .client(okHttpClient)
                 .addConverterFactory(jacksonConverterFactory)
                 .addConverterFactory(new EnumConverterFactory())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build();
     }

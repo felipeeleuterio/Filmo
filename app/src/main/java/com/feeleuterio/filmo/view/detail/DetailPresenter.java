@@ -5,6 +5,12 @@ import com.feeleuterio.filmo.api.model.Configuration;
 import com.feeleuterio.filmo.api.model.Images;
 import com.feeleuterio.filmo.api.model.Movie;
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,40 +40,59 @@ public class DetailPresenter implements DetailContract.Presenter {
     }
 
     private void getConfiguration(final int movieId) {
-        Call<Configuration> call = apiService.getConfiguration();
-        call.enqueue(new Callback<Configuration>() {
-            @Override
-            public void onResponse(Call<Configuration> call, Response<Configuration> response) {
-                if (response.isSuccessful()) {
-                    images = response.body().images;
-                    view.onConfigurationSet(images);
-                    getMovie(movieId);
-                }
-            }
+        Observable<Configuration> observable = apiService.getConfiguration();
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Configuration>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void onFailure(Call<Configuration> call, Throwable t) {
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(Configuration configuration) {
+                        images = configuration.images;
+                        view.onConfigurationSet(images);
+                        getMovie(movieId);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void getMovie(int movieId) {
-        Call<Movie> call = apiService.getMovie(movieId);
-        call.enqueue(new Callback<Movie>() {
-            @Override
-            public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (response.isSuccessful()) {
-                    view.showContent(response.body());
-                } else {
-                    view.showError();
-                }
-            }
+        Observable<Movie> observable = apiService.getMovie(movieId);
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Movie>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void onFailure(Call<Movie> call, Throwable t) {
-                view.showError();
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(Movie movie) {
+                        view.showContent(movie);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        view.showError();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
